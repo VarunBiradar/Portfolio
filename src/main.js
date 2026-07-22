@@ -15,14 +15,12 @@ const data = {
   location: "India",
 
   stats: [
-    { value: 2, suffix: "+", label: "Years Experience" },
     { value: 11, suffix: "+", label: "Projects Built" },
     { value: 5, suffix: "+", label: "Tech Stacks" },
   ],
 
   aboutCards: [
     { icon: "🚀", value: "11+", label: "Projects" },
-    { icon: "⚡", value: "2+", label: "Yrs Exp" },
     { icon: "🏆", value: "5+", label: "Awards" },
     { icon: "☕", value: "∞", label: "Coffees" },
   ],
@@ -139,10 +137,6 @@ const data = {
 
 // ─── Render App ──────────────────────────────────────
 document.querySelector('#app').innerHTML = `
-  <!-- Custom Cursor -->
-  <div class="custom-cursor" id="custom-cursor"></div>
-  <div class="cursor-follower" id="cursor-follower"></div>
-
   <!-- Background System -->
   <div class="bg-system">
     <div class="bg-noise"></div>
@@ -574,64 +568,6 @@ document.addEventListener('mousemove', (e) => {
   if (orbs[0]) orbs[0].style.transform = `translate(${x * 30}px, ${y * 30}px)`;
   if (orbs[1]) orbs[1].style.transform = `translate(${x * -40}px, ${y * -40}px)`;
   if (orbs[2]) orbs[2].style.transform = `translate(${x * 20}px, ${y * -20}px)`;
-});
-
-// ─── 3D Tilt Effect & Spotlight for Project Cards ────
-const tiltCards = document.querySelectorAll('.tilt-card');
-
-tiltCards.forEach(card => {
-  card.addEventListener('mousemove', e => {
-    // Spotlight effect
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
-    
-    // Tilt effect
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const tiltX = (y - centerY) / 20; // Adjust for intensity
-    const tiltY = (centerX - x) / 20;
-    
-    card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
-  });
-
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-  });
-});
-
-// ─── Custom Cursor Logic ─────────────────────────────
-const cursor = document.getElementById('custom-cursor');
-const follower = document.getElementById('cursor-follower');
-const interactiveElements = document.querySelectorAll('a, button, input, textarea, .project-card, .mini-card, .contact-method');
-
-document.addEventListener('mousemove', (e) => {
-  const x = e.clientX;
-  const y = e.clientY;
-  
-  cursor.style.left = `${x}px`;
-  cursor.style.top = `${y}px`;
-  
-  follower.style.left = `${x}px`;
-  follower.style.top = `${y}px`;
-});
-
-interactiveElements.forEach(el => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-});
-
-// Hide cursor when leaving window
-document.addEventListener('mouseleave', () => {
-  cursor.style.opacity = '0';
-  follower.style.opacity = '0';
-});
-
-document.addEventListener('mouseenter', () => {
-  cursor.style.opacity = '1';
-  follower.style.opacity = '1';
 });
 
 // ─── Contact Form Submission ─────────────────────────
