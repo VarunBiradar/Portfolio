@@ -236,6 +236,17 @@ document.querySelector('#app').innerHTML = `
     </svg>
   </button>
 
+  <!-- Theme Switcher -->
+  <div class="theme-switcher-wrapper">
+    <div class="theme-palette" id="theme-palette">
+      <button class="theme-btn theme-btn-default active" data-theme="default" title="Default Silver"></button>
+      <button class="theme-btn theme-btn-pink" data-theme="neon-pink" title="Neon Pink"></button>
+      <button class="theme-btn theme-btn-green" data-theme="hacker-green" title="Hacker Green"></button>
+      <button class="theme-btn theme-btn-blue" data-theme="ocean-blue" title="Ocean Blue"></button>
+    </div>
+    <button class="theme-fab" id="theme-fab" aria-label="Toggle themes">🎨</button>
+  </div>
+
   <!-- Navbar -->
   <nav id="navbar">
     <div class="nav-inner">
@@ -339,6 +350,24 @@ document.querySelector('#app').innerHTML = `
         </div>
 
       </div>
+
+      <!-- Terminal Section -->
+      <div class="terminal-window reveal" style="transition-delay:0.4s; margin-top: 80px;">
+        <div class="terminal-header">
+          <div class="terminal-dots"><span></span><span></span><span></span></div>
+          <div class="terminal-title">varun@portfolio: ~</div>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div class="terminal-output">Welcome to Varun's Interactive Terminal. Type 'help' to see available commands.</div>
+          <div class="terminal-line">
+            <span class="terminal-prompt">varun@portfolio:~$</span>
+            <div class="terminal-input-line">
+              <input type="text" class="terminal-input-area" id="terminal-input" autocomplete="off" spellcheck="false" />
+              <span class="terminal-caret"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -424,6 +453,8 @@ document.querySelector('#app').innerHTML = `
           ${data.techBadges.map(b => `<span class="tech-badge">${b}</span>`).join('')}
         </div>
       </div>
+
+
     </div>
   </section>
 
@@ -872,7 +903,7 @@ if (cursorDot && cursorOutline && typeof gsap !== 'undefined') {
 }
 
 // ─── Magnetic Buttons ───────────────────────────────────────────────────────
-const magneticButtons = document.querySelectorAll('.btn-primary, .btn-secondary, .nav-cta, .social-link');
+const magneticButtons = document.querySelectorAll('.btn-primary, .btn-secondary, .nav-cta, .social-link, .theme-fab');
 
 if (typeof gsap !== 'undefined') {
   magneticButtons.forEach(btn => {
@@ -897,5 +928,91 @@ if (typeof gsap !== 'undefined') {
         ease: 'elastic.out(1, 0.3)'
       });
     });
+  });
+}
+
+// ─── Theme Switcher ─────────────────────────────────────────────────────────
+const themeFab = document.getElementById('theme-fab');
+const themePalette = document.getElementById('theme-palette');
+const themeBtns = document.querySelectorAll('.theme-btn');
+
+if (themeFab && themePalette) {
+  themeFab.addEventListener('click', () => {
+    themePalette.classList.toggle('open');
+  });
+
+  themeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      themeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.body.className = document.body.className.replace(/\btheme-[^\s]+\b/g, '');
+      const theme = btn.dataset.theme;
+      
+      if (theme !== 'default') {
+        document.body.classList.add(`theme-${theme}`);
+      }
+    });
+  });
+}
+
+// ─── Interactive Terminal ───────────────────────────────────────────────────
+const terminalInput = document.getElementById('terminal-input');
+const terminalBody = document.getElementById('terminal-body');
+
+if (terminalInput && terminalBody) {
+  document.querySelector('.terminal-window').addEventListener('click', () => {
+    terminalInput.focus();
+  });
+
+  terminalInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const command = terminalInput.value.trim().toLowerCase();
+      terminalInput.value = '';
+
+      if (command === '') return;
+
+      const cmdLine = document.createElement('div');
+      cmdLine.className = 'terminal-output';
+      cmdLine.innerHTML = `<span style="color:var(--accent,#7ee787)">varun@portfolio:~$</span> ${command}`;
+      terminalBody.insertBefore(cmdLine, terminalInput.closest('.terminal-line'));
+
+      if (command === 'clear') {
+        const outputs = terminalBody.querySelectorAll('.terminal-output');
+        outputs.forEach(el => {
+          if (el !== cmdLine) el.remove(); 
+        });
+        cmdLine.remove();
+        return;
+      }
+
+      const outputLine = document.createElement('div');
+      outputLine.className = 'terminal-output';
+
+      switch (command) {
+        case 'help':
+          outputLine.innerHTML = 'Available commands:<br/>- <span style="color:#fff">whoami</span>: brief bio<br/>- <span style="color:#fff">skills</span>: list core skills<br/>- <span style="color:#fff">contact</span>: contact info<br/>- <span style="color:#fff">clear</span>: clear terminal';
+          break;
+        case 'whoami':
+          outputLine.innerHTML = 'I am Varun Biradar, a Full-Stack Developer passionate about building scalable, high-performance web applications.';
+          break;
+        case 'skills':
+          outputLine.innerHTML = 'Core stack: React.js, Node.js, Spring Boot, MongoDB, PostgreSQL, Java, JavaScript.';
+          break;
+        case 'contact':
+          outputLine.innerHTML = 'Email: <a href="mailto:varunbiradar4300@gmail.com" style="color:#fff">varunbiradar4300@gmail.com</a><br/>GitHub: github.com/VarunBiradar';
+          break;
+        case 'sudo':
+          outputLine.className = 'terminal-output error';
+          outputLine.innerHTML = 'Permission denied. Nice try!';
+          break;
+        default:
+          outputLine.className = 'terminal-output error';
+          outputLine.innerHTML = `Command not found: ${command}. Type 'help' for available commands.`;
+      }
+
+      terminalBody.insertBefore(outputLine, terminalInput.closest('.terminal-line'));
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
   });
 }
