@@ -688,13 +688,19 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 
   document.querySelectorAll('.reveal').forEach((el) => {
+    let delayVal = 0;
+    if (el.style.transitionDelay) {
+      delayVal = parseFloat(el.style.transitionDelay) || 0;
+    }
+
     gsap.fromTo(el,
-      { opacity: 0, y: 50 },
+      { opacity: 0, y: 40 },
       {
         opacity: 1,
         y: 0,
-        duration: 1,
-        ease: 'power3.out',
+        duration: 0.5,
+        delay: delayVal,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: el,
           start: 'top 85%',
