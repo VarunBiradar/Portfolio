@@ -264,7 +264,12 @@ document.querySelector('#app').innerHTML = `
           </div>
           <h1 class="hero-title">
             ${data.tagline}<br/>
-            <span class="gradient-text" id="typewriter"></span><span class="typewriter-cursor"></span>
+            <span style="display: grid; grid-template-columns: 1fr; white-space: nowrap;">
+              ${data.roles.map(r => `<span style="grid-area: 1 / 1; visibility: hidden; pointer-events: none;">${r}</span>`).join('')}
+              <span style="grid-area: 1 / 1;">
+                <span class="gradient-text" id="typewriter"></span><span class="typewriter-cursor"></span>
+              </span>
+            </span>
           </h1>
           <p class="hero-subtitle">${data.bio.split('.')[0] + '.'} I specialize in the MERN stack and love building products that solve real problems.</p>
 
