@@ -117,7 +117,7 @@ const data = {
       year: '2025',
       icon: '🏅',
       colorClass: 'purple',
-      link: '#',
+      link: '/Hackathon Certificate.pdf',
     },
     {
       name: 'Artificaial Intelligence Fundamentals',
@@ -125,7 +125,7 @@ const data = {
       year: '2026',
       icon: '🎖️',
       colorClass: 'blue',
-      link: '#',
+      link: '/AI Fundamentals Certificate .pdf',
     },
     {
       name: 'AI Enabled Applications Certifcate',
@@ -133,7 +133,7 @@ const data = {
       year: '2026',
       icon: '📜',
       colorClass: 'cyan',
-      link: '#',
+      link: '/AI-EnabledApplications Certificate.pdf',
     },
     {
       name: 'Introduction to Google Cloud Platform ',
@@ -141,7 +141,7 @@ const data = {
       year: '2026',
       icon: '🔖',
       colorClass: 'green',
-      link: '#',
+      link: '/introduction to google cloud platform Certificate.pdf',
     },
   ],
 
@@ -698,7 +698,16 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         scrollTrigger: {
           trigger: el,
           start: 'top 85%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none reverse',
+          onEnter: () => { el.style.transition = 'none'; },
+          onLeaveBack: () => { el.style.transition = 'none'; },
+          onComplete: () => {
+            el.style.transition = ''; 
+            gsap.set(el, { clearProps: "transform" }); 
+          },
+          onReverseComplete: () => {
+            el.style.transition = '';
+          }
         }
       }
     );
@@ -952,7 +961,7 @@ if (themeFab && themePalette) {
 
       document.body.className = document.body.className.replace(/\btheme-[^\s]+\b/g, '');
       const theme = btn.dataset.theme;
-      
+
       if (theme !== 'default') {
         document.body.classList.add(`theme-${theme}`);
       }
@@ -984,7 +993,7 @@ if (terminalInput && terminalBody) {
       if (command === 'clear') {
         const outputs = terminalBody.querySelectorAll('.terminal-output');
         outputs.forEach(el => {
-          if (el !== cmdLine) el.remove(); 
+          if (el !== cmdLine) el.remove();
         });
         cmdLine.remove();
         return;
